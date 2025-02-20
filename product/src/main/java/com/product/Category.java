@@ -2,9 +2,9 @@ package com.product;
 
 public class Category {
     private Integer category_id = 0;
-    public String category = "";
+    private String category = "";
     private String tag ="";
-    public Integer status = 0;
+    private Integer status = 0;
 
     public Category(Integer category_id, String category, String tag, Integer status){
             this.category_id=category_id;
