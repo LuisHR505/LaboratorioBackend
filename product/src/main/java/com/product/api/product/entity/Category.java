@@ -19,6 +19,10 @@ public class Category {
             this.tag=tag;
             this.status=status;
     }
+    
+    public Category() {
+        // Este constructor es necesario para JPA
+    }
 
     //metodos get
     public int getId(){
