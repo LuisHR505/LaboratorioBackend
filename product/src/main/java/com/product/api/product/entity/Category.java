@@ -1,6 +1,13 @@
 package com.product.api.product.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "Category")
 public class Category {
+	@Id
     private Integer category_id = 0;
     private String category = "";
     private String tag ="";
