@@ -11,6 +11,6 @@ import com.product.api.product.entity.Category;
 @Repository
 public interface RepoCategory extends JpaRepository<Category, Integer>{
 	@Query(value ="SELECT * FROM Category ORDER BY category", nativeQuery = true)
-	List<Category> getCategory();
+	List<Category> getCategories();
 
 }
