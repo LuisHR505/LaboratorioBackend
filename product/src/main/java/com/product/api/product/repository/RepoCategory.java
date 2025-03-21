@@ -23,11 +23,12 @@ public interface RepoCategory extends JpaRepository<Category, Integer> {
 	// encuentra a las categoruas activas por su status y las ordena.
 	List<Category> findByStatusOrderByCategory(@Param("status") Integer status);
 
-	// Insertamos una nueva categoria a la bd.
+	// Insertamos una nueva categoria a la bd. creo que aqui deberia llamarse
+	// create.
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT INTO category(category, tag, status) VALUES (:category, :tag, 1)", nativeQuery = true)
-	void insertarCategory(String category, String tag);
+	void createCategory(String category, String tag);
 
 	// actualizamos una categoria en la base de datos.
 	// recordemos que @param simplemente es para especificar a que parametro
@@ -38,10 +39,26 @@ public interface RepoCategory extends JpaRepository<Category, Integer> {
 	void updateCategory(@Param("category_id") Integer category_id, @Param("category") String category,
 			@Param("tag") String tag);
 
-	//Modificamos el valor del status de una categoria en la base de datos.
+	// Modificamos el valor del status de una categoria en la base de datos.
 	@Modifying
 	@Transactional
-	@Query(value ="UPDATE category SET status = :status WHERE category_id = :category_id", nativeQuery = true)
+	@Query(value = "UPDATE category SET status = :status WHERE category_id = :category_id", nativeQuery = true)
 	void updateCategoryStatus(@Param("category_id") Integer category_id, @Param("status") Integer status);
-	
+
+	// para poder obtener una categoria especifica.
+	@Query(value = "SELECT * FROM category WHERE category_id = :category_id ORDER BY category", nativeQuery = true)
+	Category getCategory(@Param("category_id") Integer category_id);
+
+	// Para poder activar una categoria
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE category SET status = 1 WHERE category_id = :category_id;", nativeQuery = true)
+	void enableCategory(@Param("category_id") Integer category_id);
+
+	// Para poder desactivar una categoria
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE category SET status = 0 WHERE category_id = :category_id;", nativeQuery = true)
+	void disableCategory(@Param("category_id") Integer category_id);
+
 }

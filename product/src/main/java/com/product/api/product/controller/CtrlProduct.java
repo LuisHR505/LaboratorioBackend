@@ -37,7 +37,7 @@ public class CtrlProduct {
 	public ResponseEntity<List<Category>> getCategories() {
 		return svc.getCategories();
 	}
-
+	
 	private List<Category> getCategoryList() {
 		List<Category> categories = new ArrayList<Category>();
 		categories.add(new Category(1, "Lentes", "L1", 1));
@@ -46,11 +46,17 @@ public class CtrlProduct {
 
 		return categories;
 	}
+	
+	//declaramos el controlador para poder regresar al usuario una categoria por id. 
+	@GetMapping("/{id}")
+	public ResponseEntity<Category> getCategory(@PathVariable Integer id) {
+		return svc.getCategory(id);
+	}
 
 	// declaramos los nuevos metodos de la interfaz del servicio en el controlador.
 	@GetMapping("/active")
 	public ResponseEntity<List<Category>> getActiveCategorys() {
-		return svc.getActiveCategorys();
+		return svc.getActiveCategories();
 	}
 
 	@PostMapping

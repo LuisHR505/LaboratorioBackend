@@ -13,10 +13,11 @@ public interface SvcCategory {
 	public ResponseEntity<List<Category>> getCategories();
 	
 	// Practica 5: actualizamos la interfaz del servicio Category
-	public ResponseEntity<List<Category>> getActiveCategorys();
+	public ResponseEntity<List<Category>> getActiveCategories();
 	public ResponseEntity<ApiResponse> createCategory(DtoCategoryIn in);
 	public ResponseEntity<ApiResponse> updateCategory(DtoCategoryIn in, Integer id);
 	public ResponseEntity<ApiResponse> enableCategory(Integer id);
 	public ResponseEntity<ApiResponse> disableCategory(Integer id);
+	public ResponseEntity<Category> getCategory(Integer id);
 
 }
