@@ -18,15 +18,15 @@ public class Category {
 	@JsonProperty("category_id")
 	@Column(name = "category_id")
 	private Integer category_id = 0;
-	
+
 	@JsonProperty("category")
 	@Column(name = "category")
 	private String category = "";
-	
+
 	@JsonProperty("tag")
 	@Column(name = "tag")
 	private String tag = "";
-	
+
 	@JsonProperty("status")
 	@Column(name = "status")
 	private Integer status = 0;

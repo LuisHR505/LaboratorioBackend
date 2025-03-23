@@ -1,6 +1,5 @@
 package com.product.api.product.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,74 +16,55 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.product.api.commons.dto.ApiResponse;
-import com.product.api.product.dto.DtoCategoryIn;
-import com.product.api.product.entity.Category;
-import com.product.api.product.service.SvcCategory;
+import com.product.api.product.dto.DtoProductIn;
+import com.product.api.product.dto.DtoProductListOut;
+import com.product.api.product.dto.DtoProductOut;
+import com.product.api.product.service.SvcProduct;
 import com.product.exception.ApiException;
 
 import jakarta.validation.Valid;
 
-//Agregamos Rest Controller para decir que esta clase es un controlador.
-//indicamos a traves de que path vamos a llegar al endpoint
 @RestController
-@RequestMapping("/Category")
+@RequestMapping("/product")
 public class CtrlProduct {
 
 	@Autowired
-	SvcCategory svc;
+	SvcProduct svc;
 
 	@GetMapping
-	public ResponseEntity<List<Category>> getCategories() {
-		return svc.getCategories();
+	public ResponseEntity<List<DtoProductListOut>> getProducts() {
+		return svc.getProducts();
 	}
-	
-	private List<Category> getCategoryList() {
-		List<Category> categories = new ArrayList<Category>();
-		categories.add(new Category(1, "Lentes", "L1", 1));
-		categories.add(new Category(2, "Reloj", "R1", 1));
-		categories.add(new Category(3, "Camisa", "C1", 0));
 
-		return categories;
-	}
-	
-	//declaramos el controlador para poder regresar al usuario una categoria por id. 
 	@GetMapping("/{id}")
-	public ResponseEntity<Category> getCategory(@PathVariable Integer id) {
-		return svc.getCategory(id);
-	}
-
-	// declaramos los nuevos metodos de la interfaz del servicio en el controlador.
-	@GetMapping("/active")
-	public ResponseEntity<List<Category>> getActiveCategorys() {
-		return svc.getActiveCategories();
+	public ResponseEntity<DtoProductOut> getProduct(@PathVariable Integer id) {
+		return svc.getProduct(id);
 	}
 
 	@PostMapping
-	public ResponseEntity<ApiResponse> createCategory(@Valid @RequestBody DtoCategoryIn in,
-			BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			throw new ApiException(HttpStatus.BAD_REQUEST, bindingResult.getAllErrors().get(0).getDefaultMessage());
-		}
+	public ResponseEntity<ApiResponse> createProduct(@Valid @RequestBody DtoProductIn in, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			throw new ApiException(HttpStatus.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
 
-		return svc.createCategory(in);
+		return svc.createProduct(in);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ApiResponse> updateCategory(@PathVariable("id") Integer id,
-			@Valid @RequestBody DtoCategoryIn in, BindingResult bindingResult) {
+	public ResponseEntity<ApiResponse> updateProduct(@PathVariable Integer id, @Valid @RequestBody DtoProductIn in,
+			BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
-			throw new ApiException(HttpStatus.BAD_REQUEST, bindingResult.getAllErrors().get(0).getDefaultMessage());
-		return svc.updateCategory(in, id);
+			throw new ApiException(HttpStatus.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
+
+		return svc.updateProduct(id, in);
 	}
 
 	@PatchMapping("/{id}/enable")
-	public ResponseEntity<ApiResponse> enableCategory(@PathVariable("id") Integer id) {
-		return svc.enableCategory(id);
+	public ResponseEntity<ApiResponse> enableProduct(@PathVariable Integer id) {
+		return svc.enableProduct(id);
 	}
 
 	@PatchMapping("/{id}/disable")
-	public ResponseEntity<ApiResponse> disableCategory(@PathVariable("id") Integer id) {
-		return svc.disableCategory(id);
+	public ResponseEntity<ApiResponse> disableProduct(@PathVariable Integer id) {
+		return svc.disableProduct(id);
 	}
-
 }
