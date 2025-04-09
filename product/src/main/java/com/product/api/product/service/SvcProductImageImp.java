@@ -58,16 +58,27 @@ public class SvcProductImageImp implements SvcProductImage {
 
 			// Escribir el archivo en el sistema de archivos
 			Files.write(imagePath, imageBytes);
-			
-			// Crear la entidad ProductImage y guardar la URL en la base de datos
-			ProductImage productImage = new ProductImage();
-			productImage.setProduct_id(in.getProductId());
-			productImage.setImage("/uploads/img/product/" + fileName);
 
-			// Guardar la ruta de la imagen
-			repo.save(productImage);
+			// buscamos en la base de datos si hay un product_image con dicho id del
+			// producto
+			ProductImage productImage = repo.findByProduct_id(in.getProductId());
+			if (productImage == null) {
+				// si es null tenemos que crear entonces el product image
 
-			return new ResponseEntity<>(new ApiResponse("La imagen del cliente ha sido actualizada"), HttpStatus.OK);
+				// Crear la entidad ProductImage y guardar la URL en la base de datos
+				productImage = new ProductImage();
+				productImage.setProduct_id(in.getProductId());
+				productImage.setImage("img/customer/" + fileName);
+				productImage.setStatus(1);
+
+				// Guardar la ruta de la imagen
+				repo.save(productImage);
+			} else {
+				productImage.setImage("img/customer/" + fileName);
+				repo.save(productImage);
+			}
+
+			return new ResponseEntity<>(new ApiResponse("La imagen del producto ha sido actualizada"), HttpStatus.OK);
 		} catch (DataAccessException e) {
 			throw new DBAccessException(e);
 		} catch (IOException e) {

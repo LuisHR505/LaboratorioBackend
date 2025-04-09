@@ -1,8 +1,14 @@
 package com.product.api.product.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +20,9 @@ import com.product.api.product.dto.DtoProductIn;
 import com.product.api.product.dto.DtoProductListOut;
 import com.product.api.product.dto.DtoProductOut;
 import com.product.api.product.entity.Product;
+import com.product.api.product.entity.ProductImage;
 import com.product.api.product.repository.RepoProduct;
+import com.product.api.product.repository.RepoProductImage;
 import com.product.exception.ApiException;
 import com.product.exception.DBAccessException;
 
@@ -25,7 +33,13 @@ public class SvcProductImp implements SvcProduct {
 	RepoProduct repo;
 
 	@Autowired
+	RepoProductImage repoProductImage;
+
+	@Autowired
 	MapperProduct mapper;
+
+	@Value("${app.upload.dir}")
+	private String uploadDir;
 
 	@Override
 	public ResponseEntity<List<DtoProductListOut>> getProducts() {
@@ -53,6 +67,15 @@ public class SvcProductImp implements SvcProduct {
 		try {
 			Product product = mapper.fromDto(in);
 			repo.save(product);
+
+			// esto es para que solo se pueda agregar una imagen por id.
+			// la practica me pide que pueda guardar varias, cambiar despues.
+			ProductImage productImage = new ProductImage();
+			productImage.setProduct_id(product.getProduct_id());
+			productImage.setImage("");
+			productImage.setStatus(1);
+
+			repoProductImage.save(productImage);
 			return new ResponseEntity<>(new ApiResponse("El producto ha sido registrado"), HttpStatus.CREATED);
 		} catch (DataAccessException e) {
 			if (e.getLocalizedMessage().contains("ux_product_gtin"))
@@ -118,6 +141,37 @@ public class SvcProductImp implements SvcProduct {
 			}
 		} catch (DataAccessException e) {
 			throw new DBAccessException(e);
+		}
+	}
+
+	private String readProdurtImageFile(Integer product_id) {
+		try {
+			ProductImage productImage = repoProductImage.findByProduct_id(product_id);
+			if (productImage == null)
+				return "";
+
+			String imageUrl = productImage.getImage();
+
+			// Si la URL comienza con "/" la eliminamos para obtener la ruta relativa
+			if (imageUrl.startsWith("/")) {
+				imageUrl = imageUrl.substring(1);
+			}
+
+			// Construir el Path
+			Path imagePath = Paths.get(uploadDir, imageUrl);
+
+			// Verifica que el archivo exista
+			if (!Files.exists(imagePath))
+				return "";
+
+			// Leer los bytes de la imagen y codificarlos a Base64
+			byte[] imageBytes = Files.readAllBytes(imagePath);
+			return Base64.getEncoder().encodeToString(imageBytes);
+
+		} catch (DataAccessException e) {
+			throw new DBAccessException(e);
+		} catch (IOException e) {
+			throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al leer el archivo");
 		}
 	}
 
