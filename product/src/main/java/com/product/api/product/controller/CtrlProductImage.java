@@ -14,10 +14,12 @@ import com.product.api.product.dto.DtoProductImageIn;
 import com.product.api.product.service.SvcProductImage;
 import com.product.exception.ApiException;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/product-image")
+@Tag(name = "Product image", description = "Carga de imágenes de productos")
 public class CtrlProductImage {
 
 	// declaramos un bean del servicio product image

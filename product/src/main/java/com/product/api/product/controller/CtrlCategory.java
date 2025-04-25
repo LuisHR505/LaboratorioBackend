@@ -22,12 +22,14 @@ import com.product.api.product.entity.Category;
 import com.product.api.product.service.SvcCategory;
 import com.product.exception.ApiException;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 //Agregamos Rest Controller para decir que esta clase es un controlador.
 //indicamos a traves de que path vamos a llegar al endpoint
 @RestController
 @RequestMapping("/Category")
+@Tag(name = "Category", description = "Administración de categorías")
 public class CtrlCategory {
 
 	@Autowired
@@ -37,7 +39,7 @@ public class CtrlCategory {
 	public ResponseEntity<List<Category>> getCategories() {
 		return svc.getCategories();
 	}
-	
+
 	private List<Category> getCategoryList() {
 		List<Category> categories = new ArrayList<Category>();
 		categories.add(new Category(1, "Lentes", "L1", 1));
@@ -46,8 +48,9 @@ public class CtrlCategory {
 
 		return categories;
 	}
-	
-	//declaramos el controlador para poder regresar al usuario una categoria por id. 
+
+	// declaramos el controlador para poder regresar al usuario una categoria por
+	// id.
 	@GetMapping("/{id}")
 	public ResponseEntity<Category> getCategory(@PathVariable Integer id) {
 		return svc.getCategory(id);

@@ -22,10 +22,12 @@ import com.product.api.product.dto.DtoProductOut;
 import com.product.api.product.service.SvcProduct;
 import com.product.exception.ApiException;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/product")
+@Tag(name = "Product", description = "Administracion de productos")
 public class CtrlProduct {
 
 	@Autowired
