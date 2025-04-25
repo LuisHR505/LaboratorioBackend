@@ -22,6 +22,7 @@ import com.product.api.product.entity.Category;
 import com.product.api.product.service.SvcCategory;
 import com.product.exception.ApiException;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -36,10 +37,12 @@ public class CtrlCategory {
 	SvcCategory svc;
 
 	@GetMapping
+	@Operation(summary = "Consultar categorias", description = "Retorna todas las categorias registradas en el sistema")
 	public ResponseEntity<List<Category>> getCategories() {
 		return svc.getCategories();
 	}
-
+	
+	@Operation(summary = "Consultar Categorias", description = "Retorna todas las Categorias registradas en el sistema")
 	private List<Category> getCategoryList() {
 		List<Category> categories = new ArrayList<Category>();
 		categories.add(new Category(1, "Lentes", "L1", 1));
@@ -52,17 +55,20 @@ public class CtrlCategory {
 	// declaramos el controlador para poder regresar al usuario una categoria por
 	// id.
 	@GetMapping("/{id}")
+	@Operation(summary = "Consultar categoria por id", description = "Retorna una categoria especificada por el parametro id")
 	public ResponseEntity<Category> getCategory(@PathVariable Integer id) {
 		return svc.getCategory(id);
 	}
 
 	// declaramos los nuevos metodos de la interfaz del servicio en el controlador.
 	@GetMapping("/active")
+	@Operation(summary = "Consultar categorias activas", description = "Retorna todas las categorias activas registradas en el sistema")
 	public ResponseEntity<List<Category>> getActiveCategorys() {
 		return svc.getActiveCategories();
 	}
 
 	@PostMapping
+	@Operation(summary = "Crear categoria", description = "Crea una categoria en el sistema")
 	public ResponseEntity<ApiResponse> createCategory(@Valid @RequestBody DtoCategoryIn in,
 			BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
@@ -73,6 +79,7 @@ public class CtrlCategory {
 	}
 
 	@PutMapping("/{id}")
+	@Operation(summary = "Actualizar categoria", description = "Actualiza una categoria especificada por el parametro id en el sistema")
 	public ResponseEntity<ApiResponse> updateCategory(@PathVariable("id") Integer id,
 			@Valid @RequestBody DtoCategoryIn in, BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
@@ -81,11 +88,13 @@ public class CtrlCategory {
 	}
 
 	@PatchMapping("/{id}/enable")
+	@Operation(summary = "Activar categoria", description = "Activa una categoria especificada por el parametro id en el sistema")
 	public ResponseEntity<ApiResponse> enableCategory(@PathVariable("id") Integer id) {
 		return svc.enableCategory(id);
 	}
 
 	@PatchMapping("/{id}/disable")
+	@Operation(summary = "Activar categoria", description = "Desactiva una categoria especificada por el parametro id en el sistema")
 	public ResponseEntity<ApiResponse> disableCategory(@PathVariable("id") Integer id) {
 		return svc.disableCategory(id);
 	}

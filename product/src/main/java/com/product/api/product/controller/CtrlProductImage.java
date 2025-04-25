@@ -14,6 +14,7 @@ import com.product.api.product.dto.DtoProductImageIn;
 import com.product.api.product.service.SvcProductImage;
 import com.product.exception.ApiException;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -27,6 +28,7 @@ public class CtrlProductImage {
 	SvcProductImage svc;
 
 	@PostMapping
+	@Operation(summary = "Actualizar imagen del producto", description = "Actualiza la imagen de un producto especificado por el parametro id en el sistema")
 	public ResponseEntity<ApiResponse> createProductImage(@Valid @RequestBody DtoProductImageIn in,
 			BindingResult bindingResult) {
 		if (bindingResult.hasErrors())

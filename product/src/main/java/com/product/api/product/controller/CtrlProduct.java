@@ -22,6 +22,7 @@ import com.product.api.product.dto.DtoProductOut;
 import com.product.api.product.service.SvcProduct;
 import com.product.exception.ApiException;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -34,16 +35,19 @@ public class CtrlProduct {
 	SvcProduct svc;
 
 	@GetMapping
+	@Operation(summary = "Obtener productos", description = "Obtiene todos los productos existentes en el sistema")
 	public ResponseEntity<List<DtoProductListOut>> getProducts() {
 		return svc.getProducts();
 	}
 
 	@GetMapping("/{id}")
+	@Operation(summary = "Obtener producto", description = "Obtiene un producto especificado por el parametro id en el sistema")
 	public ResponseEntity<DtoProductOut> getProduct(@PathVariable Integer id) {
 		return svc.getProduct(id);
 	}
 
 	@PostMapping
+	@Operation(summary = "Crear producto", description = "Crea un producto en el sistema")
 	public ResponseEntity<ApiResponse> createProduct(@Valid @RequestBody DtoProductIn in, BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
 			throw new ApiException(HttpStatus.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
@@ -52,6 +56,7 @@ public class CtrlProduct {
 	}
 
 	@PutMapping("/{id}")
+	@Operation(summary = "Actualizar producto", description = "Actualiza un producto especificado por su id en el sistema")	
 	public ResponseEntity<ApiResponse> updateProduct(@PathVariable Integer id, @Valid @RequestBody DtoProductIn in,
 			BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
@@ -61,11 +66,13 @@ public class CtrlProduct {
 	}
 
 	@PatchMapping("/{id}/enable")
+	@Operation(summary = "Activar producto", description = "Activa un producto especificado por el parametro id en el sistema")
 	public ResponseEntity<ApiResponse> enableProduct(@PathVariable Integer id) {
 		return svc.enableProduct(id);
 	}
 
 	@PatchMapping("/{id}/disable")
+	@Operation(summary = "Desactivar producto", description = "Desactiva un producto especificado por el parametro id en el sistema")
 	public ResponseEntity<ApiResponse> disableProduct(@PathVariable Integer id) {
 		return svc.disableProduct(id);
 	}
